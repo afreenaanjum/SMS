@@ -17,13 +17,14 @@ app.use(express.json())
 app.use(express.static(publicDirectoryPath))
 app.use('/', router)
 
-var urlServer = "", connectionCount = 0; // URL server has the URL of the existing sesssion
+var urlServer = "", connectionCount = 0, playStateServer; // URL server has the URL of the existing sesssion
 
 io.on('connection', (socket) => {
     connectionCount = connectionCount + 1;
     console.log('New WebSocket connection')
 
     socket.on('playPause', (playState) => {
+        playStateServer = playState
         //Same playPause state is broadcasted to evryone in that socket
         socket.broadcast.emit('playState', playState)
     })
@@ -35,7 +36,7 @@ io.on('connection', (socket) => {
     })
 
     //This will keep the new users joining existing session updated with the URL
-    socket.emit('newConnection', urlServer)
+    socket.emit('newConnection', { url: urlServer, playStateServer: playStateServer })
 
     socket.on('disconnect', () => {
         connectionCount = connectionCount - 1;
