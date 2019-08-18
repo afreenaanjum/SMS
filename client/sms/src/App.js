@@ -38,8 +38,8 @@ class App extends Component {
     })
 
     // When a new user joins to an existing session the URL is fetched by listening to the socket
-    socket.on('newConnection', (url) => {
-      this.setState({ url })
+    socket.on('newConnection', (state) => {
+      this.setState({ url: state.url, playing: state.playStateServer })
     })
   }
 
