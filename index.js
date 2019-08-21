@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(express.static(publicDirectoryPath))
 app.use('/', router)
 
-var urlServer = "", connectionCount = 0, playStateServer; // URL server has the URL of the existing sesssion
+var urlServer = "", connectionCount = 0, playStateServer = true, playedTimeServer = 0; // URL server has the URL of the existing sesssion
 
 io.on('connection', (socket) => {
     connectionCount = connectionCount + 1;
@@ -35,8 +35,17 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('updateURL', url)
     })
 
+    //It is listening only from host
+    socket.on('onProgress', (state) => {
+        playedTimeServer = state.played
+        //If user stops the video and host is still playing, to sync it with the host we are doing this
+        socket.broadcast.emit('sync', { played: state.played, url: urlServer })
+    })
+
     //This will keep the new users joining existing session updated with the URL
     socket.emit('newConnection', { url: urlServer, playStateServer: playStateServer })
+
+
 
     socket.on('disconnect', () => {
         connectionCount = connectionCount - 1;
@@ -44,6 +53,9 @@ io.on('connection', (socket) => {
         if (connectionCount === 0) {
             // If there are no users in the session, on new connection again the URL is set to null
             urlServer = null;
+            playedTimeServer = 0
+            playStateServer = true
+
         }
     })
 })
