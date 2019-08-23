@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(express.static(publicDirectoryPath))
 app.use('/', router)
 
-var urlServer = "", connectionCount = 0, playStateServer = true, playedTimeServer = 0; // URL server has the URL of the existing sesssion
+var urlServer = null, connectionCount = 0, playStateServer = true, playedTimeServer = 0; // URL server has the URL of the existing sesssion
 
 io.on('connection', (socket) => {
     connectionCount = connectionCount + 1;
