@@ -1,4 +1,8 @@
 import React from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import {Button, Row, Card } from 'reactstrap'
+import './videoPlayer.css'
+
 import { findDOMNode } from 'react-dom'
 import screenfull from 'screenfull'
 import { socket } from '../App'
@@ -8,9 +12,6 @@ import { connect } from 'react-redux';
 import { playing, addUrl, played, duration, seeking, onprogress, host } from '../actions/video'
 
 class VideoPlayer extends React.Component {
-
-
-
     componentDidMount() {
         //Listening to the new playing state
         console.log('componet did')
@@ -34,7 +35,6 @@ class VideoPlayer extends React.Component {
             this.player.seekTo(played, 'fraction')
         })
     }
-
 
 
     playPause = () => {
@@ -106,13 +106,14 @@ class VideoPlayer extends React.Component {
         console.log('video render', this.props.url)
         return (
             <div className='app'>
-                <section className='section'>
+                <section>
+                    <Card>
                     <div className='player-wrapper'>
                         <ReactPlayer
                             ref={this.ref}
                             className='react-player'
-                            width='100%'
-                            height='100%'
+                            width="100%"
+                            height="100%"
                             url={this.props.url}
                             playing={this.props.playing}
                             // playbackRate={this.props.playbackRate}
@@ -128,17 +129,20 @@ class VideoPlayer extends React.Component {
                             onDuration={this.onDuration}
                         />
                     </div>
+                    </Card>
 
                     <table>
                         <tbody>
-                            <tr>
-                                <th>Controls</th>
-                                <td>
-                                    <button onClick={this.stop}>Stop</button>
-                                    <button onClick={this.playPause}>{this.props.playing ? 'Pause' : 'Play'}</button>
-                                    <button onClick={this.onClickFullscreen}>Fullscreen</button>
-                                </td>
-                            </tr>
+                            <div>
+                            <Row>
+                                {/* Controls */}
+                                {/* <td > */}
+                                    <Button outline size="sm" color="primary" onClick={this.stop}>Stop</Button>{' '}
+                                    <Button outline color="primary" onClick={this.playPause}>{this.props.playing ? 'Pause' : 'Play'}</Button>
+                                    <Button outline color="primary" onClick={this.onClickFullscreen}>Fullscreen</Button>
+                                {/* </td> */}
+                            </Row>
+                            </div>
                             {/* {isHost && <tr>
                                 <th>Speed</th>
                                 <td>
@@ -150,7 +154,7 @@ class VideoPlayer extends React.Component {
                             <tr>
                                 <th>Seek</th>
                                 <td>
-                                    < input
+                                    <input
                                         type='range' min={0} max={1} step='any'
                                         value={this.props.played}
                                         onMouseDown={this.onSeekMouseDown}
@@ -160,15 +164,16 @@ class VideoPlayer extends React.Component {
                                 </td>
                             </tr>
                             <tr>
-                                <th>Custom URL</th>
+                                {/* <th>Custom URL</th> */}
                                 <td>
                                     <input ref={input => { this.urlInput = input }} type='text' placeholder='Enter URL' />
-                                    <button onClick=
+                                    <Button color="primary"
+                                    onClick=
                                         {() => {
                                             //Emitting the URL entered to the server
                                             socket.emit('url', this.urlInput.value)
                                             this.props.dispatch(addUrl(this.urlInput.value))
-                                        }}>Load</button>
+                                        }}>Load</Button>
                                 </td>
                             </tr>
                             <tr>
