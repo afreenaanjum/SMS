@@ -1,13 +1,13 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import NavBar from './components/NavBar'
-import {Button, Container, Row, Col, Card} from 'reactstrap'
+import {Container, Row, Col} from 'reactstrap'
 
-import { BrowserRouter, Route } from 'react-router-dom'
-import { host } from './actions/video'
+import { BrowserRouter } from 'react-router-dom'
+// import { host } from './actions/video'
 import socketIOClient from 'socket.io-client'
 import { connect } from 'react-redux';
-import StartPage from './components/startPage'
+// import StartPage from './components/startPage'
 import VideoPlayer from './components/videoPlayer'
 import Chat from './components/Chat/Chat' 
 
@@ -23,17 +23,14 @@ function App(props) {
           <Container>
             <Row style={{margin:"15px"}} />
             <Row>
-              <Col sm="6" >
+              <Col sm="8" >
                 <VideoPlayer />
               </Col>
-              <Col sm="6" >
-                <Card>
-                  <Chat />
-                </Card>
+              <Col sm="4" >
+                <Chat />
               </Col>
             </Row>
           </Container>
-          
         </div >
     </BrowserRouter>
   )

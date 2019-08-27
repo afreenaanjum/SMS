@@ -1,6 +1,16 @@
 import React, {Component} from 'react'
 import { socket } from '../../App'
-import { Socket } from 'net';
+import './Chat.css' 
+import { FaPaperPlane } from "react-icons/fa";
+
+import {
+    InputGroup,
+    InputGroupAddon,
+    Input,
+    Button,
+    Card,
+    Alert
+} from 'reactstrap';
 
 class Chat extends Component{
     constructor(){
@@ -15,7 +25,7 @@ class Chat extends Component{
 
     componentDidMount(){
         socket.on("message", (message) => {
-            // console.log(message)
+            console.log(message)
             this.setState({messages: [...this.state.messages, message]})
         })
     }
@@ -36,29 +46,70 @@ class Chat extends Component{
         console.log(this.state)
         return(
             <div>
-                <div>
-                    {
-                        this.state.messages.map( message => {
-                            return(
-                                <div>
-                                    <div>{message.text}</div>
-                                    <div>{message.createdAt}</div>
-                                    <div>{message.socketId}</div>
-                                </div>)
-                        })
-                    }
-                </div>
+                <Card style={{paddingBottom:"15px", border:"none", backgroundColor:"#f5f5f5"}}>
+                    <div className="scroll" id="style-1">
+                        <div className="force-overflow">
+                        <div className="message-align">
+                        {this.state.messages.map( message => {
+                            return( (message.createdAt)?
+                                    ((socket.id !== message.socketId) ?   
+                                        (<Card style={{ backgroundColor: "#d9f7be", 
+                                                            border:"none",
+                                                            marginTop: "4px", 
+                                                            marginRight: "50px",
+                                                            marginLeft: "8px", 
+                                                            paddingLeft:"6px",
+                                                            paddingTop:"6px",
+                                                            paddingRight:"6px" }}>
+                                            <p className="message-text">{message.text}</p>
+                                            <p className="msg_time">{`${message.createdAt} | Username: ${message.socketId}`}</p>
+                                        </Card>)
+                                        :
+                                        (<Card style={{ backgroundColor: "#b7eb8f",
+                                                            border:"none",
+                                                            marginTop: "4px", 
+                                                            marginLeft: "50px", 
+                                                            marginRight: "8px", 
+                                                            paddingLeft:"6px",
+                                                            paddingTop:"6px",
+                                                            paddingRight:"6px" }}>
+                                            <p className="message-text">{message.text}</p>
+                                            <p className="msg_time">{`${message.createdAt} | Username: ${message.socketId}`}</p>
+                                        </Card>)
+                                    ):(
+                                    <Alert
+                                        color="dark"
+                                        style={{ border:"none",
+                                                 padding:"1px",
+                                                 margin:"100px",
+                                                 textAlign:"center",
+                                                 marginTop: "4px",
+                                                 marginBottom: "7px",
+                                                 fontSize: "13px",
+                                                 height: "20px"
+                                                 }}>
+                                        <p style={{  }}>{message.text}</p>
+                                    </Alert>))
+                            })}
+                        </div>
+                        </div>
+                    </div>
+                </Card>
+
                 <form onSubmit={this.handleSubmit}>
-                      <input
-                            id="typedMessage" 
+                    <InputGroup>
+                        <Input
                             type="text"
                             value={this.state.message}
                             onChange={this.handleChange}
                             placeholder={"Type message.."} 
                             required
-			            />
-                        <input type='submit'/>
-				</form>
+                        />
+                        <InputGroupAddon addonType="append">
+                            <Button><FaPaperPlane size="1em" /></Button>
+                        </InputGroupAddon>
+                    </InputGroup>
+                </form>
             </div>
         )
     }

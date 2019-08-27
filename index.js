@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
     connectionCount = connectionCount + 1;
     console.log('New WebSocket connection')
 
-    socket.broadcast.emit("message", "A new user has joined!")
+    socket.broadcast.emit("message", {text: "A new user has joined!"})
 
     socket.on('message', (message) => {
         console.log('server',message,generateMessage(message,socket.id))

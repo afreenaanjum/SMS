@@ -1,6 +1,17 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import {Button, Row, Card } from 'reactstrap'
+import { FaPlay, FaStop, FaPause, FaSyncAlt } from "react-icons/fa";
+import { MdFullscreen } from "react-icons/md";
+
+import {
+    InputGroup,
+    InputGroupAddon,
+    Row,
+    Button,
+    Card,
+    CardFooter
+} from 'reactstrap';
+
 import './videoPlayer.css'
 
 import { findDOMNode } from 'react-dom'
@@ -107,131 +118,112 @@ class VideoPlayer extends React.Component {
         return (
             <div className='app'>
                 <section>
-                    <Card>
-                    <div className='player-wrapper'>
-                        <ReactPlayer
-                            ref={this.ref}
-                            className='react-player'
-                            width="100%"
-                            height="100%"
-                            url={this.props.url}
-                            playing={this.props.playing}
-                            // playbackRate={this.props.playbackRate}
-                            onReady={() => console.log('onReady')}
-                            onStart={() => console.log('onStart')}
-                            onPlay={this.onPlay}
-                            onPause={this.onPause}
-                            onBuffer={() => console.log('onBuffer')}
-                            onSeek={e => console.log('onSeek', e)}
-                            onEnded={this.onEnded}
-                            onError={e => console.log('onError', e)}
-                            onProgress={this.onProgress}
-                            onDuration={this.onDuration}
-                        />
-                    </div>
+                    <Card style={{border:"none", backgroundColor:"#ebf1f4", padding:"null"}}>
+                        <div className='player-wrapper'>
+                            <ReactPlayer
+                                ref={this.ref}
+                                className='react-player'
+                                width="100%"
+                                height="100%"
+                                url={this.props.url}
+                                playing={this.props.playing}
+                                // playbackRate={this.props.playbackRate}
+                                onReady={() => console.log('onReady')}
+                                onStart={() => console.log('onStart')}
+                                onPlay={this.onPlay}
+                                onPause={this.onPause}
+                                onBuffer={() => console.log('onBuffer')}
+                                onSeek={e => console.log('onSeek', e)}
+                                onEnded={this.onEnded}
+                                onError={e => console.log('onError', e)}
+                                onProgress={this.onProgress}
+                                onDuration={this.onDuration}
+                            />
+                        </div>
+                        <CardFooter style={{border:"none"}}>
+                            <Button color="none" onClick={this.stop}><FaStop color="white" size="1em"/></Button>{' '}
+                            <Button color="none" onClick={this.playPause}>{this.props.playing ? <FaPause color="white" size="1em"/> : <FaPlay  color="white" size="1em"/>}</Button>{' '}
+                            <Button color="none" 
+                                    onClick={() => {
+                                                this.player.seekTo(this.props.played, "fraction")
+                                            }}><FaSyncAlt color="white" size="1em"/>
+                            </Button>
+                            <Button color="none" 
+                                    onClick={this.onClickFullscreen}><MdFullscreen color="white" size="1.5em"/>
+                            </Button>
+                        </CardFooter>
                     </Card>
-
-                    <table>
-                        <tbody>
-                            <div>
-                            <Row>
-                                {/* Controls */}
-                                {/* <td > */}
-                                    <Button outline size="sm" color="primary" onClick={this.stop}>Stop</Button>{' '}
-                                    <Button outline color="primary" onClick={this.playPause}>{this.props.playing ? 'Pause' : 'Play'}</Button>
-                                    <Button outline color="primary" onClick={this.onClickFullscreen}>Fullscreen</Button>
-                                {/* </td> */}
-                            </Row>
-                            </div>
-                            {/* {isHost && <tr>
-                                <th>Speed</th>
-                                <td>
-                                    <button onClick={setPlaybackRate} value={1}>1x</button>
-                                    <button onClick={setPlaybackRate} value={1.5}>1.5x</button>
-                                    <button onClick={setPlaybackRate} value={2}>2x</button>
-                                </td>
-                            </tr>} */}
+                    <Row style={{margin:"5px"}} />
+                    <InputGroup>
+                    <div>
+                        <input
+                        className="player-progress"
+                            type='range' min={0} max={1} step='any'
+                            value={this.props.played}
+                            onMouseDown={this.onSeekMouseDown}
+                            onChange={this.onSeekChange}
+                            onMouseUp={this.onSeekMouseUp}
+                        />
+                     </div>   
+                    </InputGroup>
+                    <InputGroup>
+                        <input ref={input => { this.urlInput = input }} type='text' placeholder='Enter URL' />
+                        <InputGroupAddon addonType="append">
+                            <Button onClick=
+                                    {() => {
+                                        //Emitting the URL entered to the server
+                                        socket.emit('url', this.urlInput.value)
+                                        this.props.dispatch(addUrl(this.urlInput.value))
+                                    }}>Load
+                            </Button>
+                            <Button onClick={() => {
+                                    this.props.dispatch(host(true))
+                                    }}>Host
+                            </Button>
+                        </InputGroupAddon>
+                    </InputGroup>            
+                    
+                    <Card style={{margin:"50px", padding:"10px"}}>
+                        <h2>State</h2>
+                        <table><tbody>
                             <tr>
-                                <th>Seek</th>
-                                <td>
-                                    <input
-                                        type='range' min={0} max={1} step='any'
-                                        value={this.props.played}
-                                        onMouseDown={this.onSeekMouseDown}
-                                        onChange={this.onSeekChange}
-                                        onMouseUp={this.onSeekMouseUp}
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                {/* <th>Custom URL</th> */}
-                                <td>
-                                    <input ref={input => { this.urlInput = input }} type='text' placeholder='Enter URL' />
-                                    <Button color="primary"
-                                    onClick=
-                                        {() => {
-                                            //Emitting the URL entered to the server
-                                            socket.emit('url', this.urlInput.value)
-                                            this.props.dispatch(addUrl(this.urlInput.value))
-                                        }}>Load</Button>
+                                <th>url</th>
+                                <td className={!this.props.url ? 'faded' : ''}>
+                                    {this.props.url || 'null'}
                                 </td>
                             </tr>
                             <tr>
-                                <th>SYNC</th>
-                                <td>
-                                    <button onClick={() => {
-                                        this.player.seekTo(this.props.played, "fraction")
-                                    }}>Sync</button></td>
+                                <th>playing</th>
+                                <td>{this.props.playing ? 'true' : 'false'}</td>
                             </tr>
                             <tr>
-                                <th>Host</th>
-                                <td>
-                                    <button onClick={() => {
-                                        this.props.dispatch(host(true))
-                                    }}>Host</button></td></tr>
+                                <th>played</th>
+                                <td>{this.props.played.toFixed(3)}</td>
+                            </tr>
+                            <tr>
+                                <th>loaded</th>
+                                <td>{this.props.loaded.toFixed(3)}</td>
+                            </tr>
+                            <tr>
+                                <th>duration</th>
+                                <td><Duration seconds={this.props.duration} /></td>
+                            </tr>
+                            <tr>
+                                <th>elapsed</th>
+                                <td><Duration seconds={this.props.duration * this.props.played} /></td>
+                            </tr>
+                            <tr>
+                                <th>remaining</th>
+                                <td><Duration seconds={this.props.duration * (1 - this.props.played)} /></td>
+                            </tr>
                         </tbody></table>
-
-                    <h2>State</h2>
-
-                    <table><tbody>
-                        <tr>
-                            <th>url</th>
-                            <td className={!this.props.url ? 'faded' : ''}>
-                                {this.props.url || 'null'}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>playing</th>
-                            <td>{this.props.playing ? 'true' : 'false'}</td>
-                        </tr>
-                        <tr>
-                            <th>played</th>
-                            <td>{this.props.played.toFixed(3)}</td>
-                        </tr>
-                        <tr>
-                            <th>loaded</th>
-                            <td>{this.props.loaded.toFixed(3)}</td>
-                        </tr>
-                        <tr>
-                            <th>duration</th>
-                            <td><Duration seconds={this.props.duration} /></td>
-                        </tr>
-                        <tr>
-                            <th>elapsed</th>
-                            <td><Duration seconds={this.props.duration * this.props.played} /></td>
-                        </tr>
-                        <tr>
-                            <th>remaining</th>
-                            <td><Duration seconds={this.props.duration * (1 - this.props.played)} /></td>
-                        </tr>
-                    </tbody></table>
+                    </Card>
                 </section>
             </div >
         )
     }
 
 }
-
 
 const mapStateToProps = (state) => {
     console.log('mapStateToProps', state)
