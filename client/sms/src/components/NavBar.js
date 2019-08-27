@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaUserCircle, FaBold } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 
 import {
   Collapse,

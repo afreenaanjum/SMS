@@ -1,0 +1,35 @@
+.scroll {
+  height: 30rem;
+  overflow-y: auto;
+  transform: rotate(180deg);
+  /* direction: rtl */
+}
+
+
+#style-1::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5;
+}
+
+.message-align {
+  transform: rotate(180deg);
+}
+
+.message-text{
+  /* direction: ltr; */
+  margin-bottom: 25px;
+  font-size: 13.5px;
+}
+
+.datetime{
+    float: right
+    color #999
+}
+
+.msg_time{
+  position: absolute;
+  left: 6px;
+  bottom: -10px;
+  color: #8c8c8c;
+  font-size: 9px;
+}
