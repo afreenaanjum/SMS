@@ -1,0 +1,1 @@
+An application to host the short meetings with group file sharing, instant chatting, instant opinion capturing, and synchronous video watching [sync ‘n’ study]. The motivation behind this is to facilitate the short gathering of people and put them under the same agenda.
