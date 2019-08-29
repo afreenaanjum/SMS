@@ -1,5 +1,5 @@
 ## Short Meetup Session [SMS.]
-An web application to host the short meetings. The motivation behind this is to facilitate the short gathering of people and put them under the same agenda.
+An web application to host the short meetings. The motivation behind this is to facilitate the short gathering of people under the same agenda and providing different facilites while avoiding the 
 
 ### Features
 1. Group file sharing
@@ -8,7 +8,7 @@ An web application to host the short meetings. The motivation behind this is to 
 4. Instant group messenger.
 
 ### Technologies
-* Single-page application using Reactjs and Redux.
+* Single-page application using __reactjs__ and __Redux__.
 * User registration and authentication using JWT.
 * Synchronizing the data among the attendees and host using Socket.io.
 * Multiple room creation and access functionality to attendees.
