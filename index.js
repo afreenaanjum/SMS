@@ -14,6 +14,8 @@ const port = process.env.PORT || 3005
 const publicDirectoryPath = path.join(__dirname, '../public')
 
 
+
+app.use(express.static(path.join(__dirname, "client/sms", "build")))
 app.use(express.json())
 app.use(express.static(publicDirectoryPath))
 app.use('/', router)
@@ -73,6 +75,10 @@ io.on('connection', (socket) => {
         }
     })
 })
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client/sms", "build", "index.html"));
+});
 
 server.listen(port, () => {
     console.log(`Server is up on port ${port}`)
