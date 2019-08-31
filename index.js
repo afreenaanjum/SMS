@@ -17,9 +17,15 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.json())
 app.use(express.static(publicDirectoryPath))
 app.use('/', router)
+app.use(express.static(path.join(__dirname, "client/build")))
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/client/build/index.html"))
+})
+
 
 var urlServer = null, connectionCount = 0, playStateServer = true, playedTimeServer = 0; // URL server has the URL of the existing session
-let connectedUsers = [ ]
+let connectedUsers = []
 // let messages = { }
 
 io.on('connection', (socket) => {
@@ -27,11 +33,11 @@ io.on('connection', (socket) => {
     connectionCount = connectionCount + 1;
     console.log('New WebSocket connection')
 
-    socket.broadcast.emit("message", {text: "A new user has joined!"})
+    socket.broadcast.emit("message", { text: "A new user has joined!" })
 
     socket.on('message', (message) => {
-        console.log('server',message,generateMessage(message,socket.id))
-        io.emit("message", generateMessage(message,socket.id))
+        console.log('server', message, generateMessage(message, socket.id))
+        io.emit("message", generateMessage(message, socket.id))
 
     })
 
