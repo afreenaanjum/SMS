@@ -8,8 +8,8 @@
     "heroku-postbuild": "cd client/sms && npm install && npm run build"
   },
   "engines": {
-    "node": "10.3.0",
-    "npm": "^6.8.0"
+    "node": "10.15.3",
+    "npm": "^6.4.1"
   },
   "keywords": [],
   "author": "",
