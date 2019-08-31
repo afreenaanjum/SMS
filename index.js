@@ -14,16 +14,6 @@ const port = process.env.PORT || 3005
 const publicDirectoryPath = path.join(__dirname, '../public')
 
 
-app.use(express.json())
-app.use(express.static(publicDirectoryPath))
-app.use('/', router)
-app.use(express.static(path.join(__dirname, "client/build")))
-
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname + "/client/build/index.html"))
-})
-
-
 var urlServer = null, connectionCount = 0, playStateServer = true, playedTimeServer = 0; // URL server has the URL of the existing session
 let connectedUsers = []
 // let messages = { }
@@ -78,6 +68,14 @@ io.on('connection', (socket) => {
 
         }
     })
+})
+
+app.use(express.json())
+app.use(express.static(publicDirectoryPath))
+app.use('/', router)
+app.use(express.static(path.join(__dirname, "client/build")))
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/client/build/index.html"))
 })
 
 server.listen(port, () => {
