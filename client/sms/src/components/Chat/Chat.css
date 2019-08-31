@@ -33,3 +33,35 @@
   color: #8c8c8c;
   font-size: 9px;
 }
+
+#group_messages{
+background-color: #d9f7be;
+border: none;
+margin-top: 4px;
+margin-right: 50px;
+margin-left: 8px;
+padding-left:6px ;
+padding-top:6px;
+padding-right: 6px; }
+
+#my_messages{
+   background-color: #b7eb8f;
+    border:none;
+    margin-top: 4px;
+    margin-left: 50px;
+    margin-right: 8px;
+    padding-left:6px;
+    padding-top:6px;
+    padding-right:6px 
+}
+
+#alert{
+  border:none;
+  padding:1px;
+  margin:100px;
+  text-align:center;
+  margin-top: 4px;
+  margin-bottom: 7px;
+  font-size: 13px;
+  height: 20px
+}

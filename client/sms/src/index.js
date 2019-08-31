@@ -9,9 +9,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //Creating redux store
 const store = configureStore()
 
+//Subscribe method gets called only when there are changes made.
 store.subscribe(() => {
     console.log(store.getState())
 })
+
 console.log(store.getState())
 
 const jsx = (

@@ -1,8 +1,18 @@
 import React from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import { findDOMNode } from 'react-dom'
+import screenfull from 'screenfull'
+import { socket } from '../../App'
+import ReactPlayer from 'react-player'
+import Duration from '../Duration'
+import { connect } from 'react-redux';
+import { playing, addUrl, played, duration, seeking, onprogress, host } from '../../actions/video'
+
+//Icons
 import { FaPlay, FaStop, FaPause, FaSyncAlt } from "react-icons/fa";
 import { MdFullscreen } from "react-icons/md";
 
+//Styles 
+import './videoPlayer.css'
 import {
     InputGroup,
     InputGroupAddon,
@@ -12,20 +22,9 @@ import {
     CardFooter
 } from 'reactstrap';
 
-import './videoPlayer.css'
-
-import { findDOMNode } from 'react-dom'
-import screenfull from 'screenfull'
-import { socket } from '../App'
-import ReactPlayer from 'react-player'
-import Duration from './Duration'
-import { connect } from 'react-redux';
-import { playing, addUrl, played, duration, seeking, onprogress, host } from '../actions/video'
-
 class VideoPlayer extends React.Component {
     componentDidMount() {
         //Listening to the new playing state
-        console.log('componet did')
         socket.on('playState', (playState) => {
             this.props.dispatch(playing(playState))
         })
@@ -118,7 +117,7 @@ class VideoPlayer extends React.Component {
         return (
             <div className='app'>
                 <section>
-                    <Card style={{border:"none", backgroundColor:"#ebf1f4", padding:"null"}}>
+                    <Card style={{ border: "none", backgroundColor: "#ebf1f4", padding: "null" }}>
                         <div className='player-wrapper'>
                             <ReactPlayer
                                 ref={this.ref}
@@ -140,50 +139,48 @@ class VideoPlayer extends React.Component {
                                 onDuration={this.onDuration}
                             />
                         </div>
-                        <CardFooter style={{border:"none"}}>
-                            <Button color="none" onClick={this.stop}><FaStop color="white" size="1em"/></Button>{' '}
-                            <Button color="none" onClick={this.playPause}>{this.props.playing ? <FaPause color="white" size="1em"/> : <FaPlay  color="white" size="1em"/>}</Button>{' '}
-                            <Button color="none" 
-                                    onClick={() => {
-                                                this.player.seekTo(this.props.played, "fraction")
-                                            }}><FaSyncAlt color="white" size="1em"/>
+                        <CardFooter style={{ border: "none" }}>
+                            <Button color="none" onClick={this.stop}><FaStop color="white" size="1em" /></Button>{' '}
+                            <Button color="none" onClick={this.playPause}>{this.props.playing ? <FaPause color="white" size="1em" /> : <FaPlay color="white" size="1em" />}</Button>{' '}
+                            <Button color="none"
+                                onClick={() => {
+                                    this.player.seekTo(this.props.played, "fraction")
+                                }}><FaSyncAlt color="white" size="1em" />
                             </Button>
-                            <Button color="none" 
-                                    onClick={this.onClickFullscreen}><MdFullscreen color="white" size="1.5em"/>
+                            <Button color="none"
+                                onClick={this.onClickFullscreen}><MdFullscreen color="white" size="1.5em" />
                             </Button>
                         </CardFooter>
                     </Card>
-                    <Row style={{margin:"5px"}} />
+                    <Row style={{ margin: "5px" }} />
                     <InputGroup>
-                    <div>
                         <input
-                        className="player-progress"
+                            className="player-progress"
                             type='range' min={0} max={1} step='any'
                             value={this.props.played}
                             onMouseDown={this.onSeekMouseDown}
                             onChange={this.onSeekChange}
                             onMouseUp={this.onSeekMouseUp}
                         />
-                     </div>   
                     </InputGroup>
                     <InputGroup>
                         <input ref={input => { this.urlInput = input }} type='text' placeholder='Enter URL' />
                         <InputGroupAddon addonType="append">
                             <Button onClick=
-                                    {() => {
-                                        //Emitting the URL entered to the server
-                                        socket.emit('url', this.urlInput.value)
-                                        this.props.dispatch(addUrl(this.urlInput.value))
-                                    }}>Load
+                                {() => {
+                                    //Emitting the URL entered to the server
+                                    socket.emit('url', this.urlInput.value)
+                                    this.props.dispatch(addUrl(this.urlInput.value))
+                                }}>Load
                             </Button>
                             <Button onClick={() => {
-                                    this.props.dispatch(host(true))
-                                    }}>Host
+                                this.props.dispatch(host(true))
+                            }}>Host
                             </Button>
                         </InputGroupAddon>
-                    </InputGroup>            
-                    
-                    <Card style={{margin:"50px", padding:"10px"}}>
+                    </InputGroup>
+
+                    <Card style={{ margin: "50px", padding: "10px" }}>
                         <h2>State</h2>
                         <table><tbody>
                             <tr>
