@@ -16,10 +16,6 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.json())
 app.use(express.static(publicDirectoryPath))
 
-
-
-
-
 var urlServer = null, connectionCount = 0, playStateServer = true, playedTimeServer = 0; // URL server has the URL of the existing session
 let connectedUsers = []
 // let messages = { }
@@ -39,7 +35,7 @@ io.on('connection', (socket) => {
 
     socket.on('playPause', (playState) => {
         playStateServer = playState
-        //Same playPause state is broadcasted to evryone in that socket
+        //Same playPause state is broadcasted to everyone in that socket
         socket.broadcast.emit('playState', playState)
     })
 
@@ -75,7 +71,6 @@ io.on('connection', (socket) => {
         }
     })
 })
-
 
 app.use('/', router)
 // The "catchall" handler: for any request that doesn't
