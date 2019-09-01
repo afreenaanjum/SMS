@@ -11,8 +11,10 @@ import Chat from './components/Chat/Chat'
 import NavBar from './components/NavBar'
 import { Container, Row, Col } from 'reactstrap'
 
+let port = process.env.PORT || 3005
+
 //Setting up sockets on client side
-var socket = socketIOClient("http://localhost:3005")
+var socket = socketIOClient(`http://localhost:${port}`)
 
 function App(props) {
   return (
