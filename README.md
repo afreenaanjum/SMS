@@ -3,8 +3,8 @@ An web application to host the short meetings. The motivation behind this is to 
 
 ## Features
 1. Group file sharing
-2. Instant opinion capturing
-3. Synchronous video watching
+2. Synchronous video watching
+3. Instant opinion capturing
 4. Instant group messenger.
 
 ## Technologies
