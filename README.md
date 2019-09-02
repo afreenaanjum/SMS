@@ -1,5 +1,5 @@
 # Short Meetup Sessions [SMS.]
-An web application to host the short meetings. The motivation behind this is to make people in short gatherings and to provide different facilities.
+An web application to host short meetings. The motivation behind this is to make people in short gatherings to be provided different facilities.
 
 ## Features
 1. Group file sharing
