@@ -6,6 +6,7 @@ import configureStore from './store/configureStore'
 import { App } from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 //Creating redux store
 const store = configureStore()
 

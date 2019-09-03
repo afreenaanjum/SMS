@@ -4,9 +4,23 @@ class StartPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            isSignUp: false,
-            isSignIn: false
+            isSignedUp: false,
+            isSignedIn: false
         }
+        this.handleSignUp = this.handleSignUp.bind(this)
+        this.handleSignIn = this.handleSignUp.bind(this)
+    }
+
+    handleSignUp() {
+        this.setState((prevState) => {
+            isSignedUp: !prevState.isSignedUp
+        })
+    }
+
+    handleSignIn() {
+        this.setState((prevState) => {
+            isSignedIn: !prevState.isSignedIn
+        })
     }
 
     render() {
@@ -16,8 +30,9 @@ class StartPage extends React.Component {
                 <h4>Short Meetup Sessions</h4>
                 <hr />
                 <p>Connecting people in sessions and enabling communication</p>
-                <button>Sign Up</button>
+                <button onClick={this.handleSignUp}>Sign Up</button>
                 <button>Sign In </button>
+
             </div>
         )
     }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import socketIOClient from 'socket.io-client'
+import io from 'socket.io-client'
 import { connect } from 'react-redux';
 
 //App components
@@ -11,8 +11,10 @@ import Chat from './components/Chat/Chat'
 import NavBar from './components/NavBar'
 import { Container, Row, Col } from 'reactstrap'
 
+// let port = process.env.PORT || 3005
+
 //Setting up sockets on client side
-var socket = socketIOClient("http://localhost:3005")
+const socket = io()
 
 function App(props) {
   return (

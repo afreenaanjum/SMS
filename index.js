@@ -1,4 +1,5 @@
 const express = require('express')
+const mongoose = require('./config/database')
 const http = require('http')
 const path = require('path')
 const socketIo = require('socket.io')
@@ -10,34 +11,32 @@ const app = express()
 const server = http.createServer(app)
 const io = socketIo(server)
 
-const port = process.env.PORT || 3005
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, "client/sms/build")))
 const publicDirectoryPath = path.join(__dirname, '../public')
-
-
 app.use(express.json())
 app.use(express.static(publicDirectoryPath))
-app.use('/', router)
 
 var urlServer = null, connectionCount = 0, playStateServer = true, playedTimeServer = 0; // URL server has the URL of the existing session
-let connectedUsers = [ ]
-// let messages = { }
+let connectedUsers = []
+let messages = []
 
 io.on('connection', (socket) => {
     connectedUsers = [...connectedUsers, socket.id]
     connectionCount = connectionCount + 1;
     console.log('New WebSocket connection')
 
-    socket.broadcast.emit("message", {text: "A new user has joined!"})
+    socket.broadcast.emit("message", { text: "A new user has joined!" })
 
     socket.on('message', (message) => {
-        console.log('server',message,generateMessage(message,socket.id))
-        io.emit("message", generateMessage(message,socket.id))
-
+        messages.push(message)
+        console.log('server', message, generateMessage(message, socket.id))
+        io.emit("message", generateMessage(message, socket.id))
     })
 
     socket.on('playPause', (playState) => {
         playStateServer = playState
-        //Same playPause state is broadcasted to evryone in that socket
+        //Same playPause state is broadcasted to everyone in that socket
         socket.broadcast.emit('playState', playState)
     })
 
@@ -73,6 +72,17 @@ io.on('connection', (socket) => {
         }
     })
 })
+
+app.use('/', router)
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/client/sms/build/index.html"))
+})
+
+
+
+const port = process.env.PORT || 3005
 
 server.listen(port, () => {
     console.log(`Server is up on port ${port}`)
