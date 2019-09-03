@@ -4,15 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-<<<<<<< HEAD
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "heroku-postbuild":"cd client/sms && npm run build"
-  },
-  "engines": {
-    "node":"10.3.0",
-    "npm":"^6.8.0"
-=======
     "start": "node index.js",
     "heroku-postbuild": "cd client/sms && npm install && npm run build",
     "dev": "concurrently \"nodemon index.js \" \"cd client && npm start \" "
@@ -20,7 +11,6 @@
   "engines": {
     "node": "10.15.3",
     "npm": "^6.4.1"
->>>>>>> 108c2b8b9fc32423dc02ef48618aa796ac51e829
   },
   "keywords": [],
   "author": "",

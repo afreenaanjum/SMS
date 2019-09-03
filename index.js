@@ -14,13 +14,6 @@ const io = socketIo(server)
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "client/sms/build")))
 const publicDirectoryPath = path.join(__dirname, '../public')
-<<<<<<< HEAD
-
-
-
-app.use(express.static(path.join(__dirname, "client/sms", "build")))
-=======
->>>>>>> 108c2b8b9fc32423dc02ef48618aa796ac51e829
 app.use(express.json())
 app.use(express.static(publicDirectoryPath))
 
@@ -80,11 +73,6 @@ io.on('connection', (socket) => {
     })
 })
 
-<<<<<<< HEAD
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client/sms", "build", "index.html"));
-});
-=======
 app.use('/', router)
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
@@ -92,10 +80,7 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname + "/client/sms/build/index.html"))
 })
 
-
-
 const port = process.env.PORT || 3005
->>>>>>> 108c2b8b9fc32423dc02ef48618aa796ac51e829
 
 server.listen(port, () => {
     console.log(`Server is up on port ${port}`)
