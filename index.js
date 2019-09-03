@@ -1,4 +1,5 @@
 const express = require('express')
+const mongoose = require('./config/database')
 const http = require('http')
 const path = require('path')
 const socketIo = require('socket.io')
@@ -18,7 +19,7 @@ app.use(express.static(publicDirectoryPath))
 
 var urlServer = null, connectionCount = 0, playStateServer = true, playedTimeServer = 0; // URL server has the URL of the existing session
 let connectedUsers = []
-// let messages = { }
+let messages = []
 
 io.on('connection', (socket) => {
     connectedUsers = [...connectedUsers, socket.id]
@@ -28,9 +29,9 @@ io.on('connection', (socket) => {
     socket.broadcast.emit("message", { text: "A new user has joined!" })
 
     socket.on('message', (message) => {
+        messages.push(message)
         console.log('server', message, generateMessage(message, socket.id))
         io.emit("message", generateMessage(message, socket.id))
-
     })
 
     socket.on('playPause', (playState) => {
