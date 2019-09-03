@@ -11,7 +11,7 @@ import Chat from './components/Chat/Chat'
 import NavBar from './components/NavBar'
 import { Container, Row, Col } from 'reactstrap'
 
-// let port = process.env.PORT || 3005
+
 
 //Setting up sockets on client side
 const socket = io()
