@@ -15,6 +15,7 @@ module.exports.register = function (req, res) {
             })
         })
         .catch((err) => {
+            res.status(406)
             res.send(err)
         })
 }
@@ -40,6 +41,7 @@ module.exports.login = function (req, res) {
             })
         })
         .catch((err) => {
+            res.status(401)
             res.send(err)
         })
 }

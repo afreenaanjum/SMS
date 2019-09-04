@@ -6,6 +6,7 @@ const { server } = require('./socket')
 const path = require('path')
 const router = require('./config/routes')
 
+
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "client/sms/build")))
 const publicDirectoryPath = path.join(__dirname, '../public')
@@ -19,8 +20,6 @@ app.use('/', router)
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname + "/client/sms/build/index.html"))
 })
-
-
 
 const port = process.env.PORT || 3005
 

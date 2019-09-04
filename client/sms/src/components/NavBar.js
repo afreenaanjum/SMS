@@ -1,5 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import { FaUserCircle } from "react-icons/fa";
+import { logoutUser }  from '../actions/userAuth'
 
 import {
   Collapse,
@@ -14,7 +16,7 @@ import {
   DropdownMenu,
   DropdownItem } from 'reactstrap';
 
-export default class NavBar extends React.Component {
+class NavBar extends React.Component {
   constructor(props) {
     super(props);
 
@@ -28,6 +30,11 @@ export default class NavBar extends React.Component {
       isOpen: !this.state.isOpen
     });
   }
+
+  onLogout = () => {
+    this.props.dispatch(logoutUser())
+  }
+
   render() {
     return (
       <div>
@@ -51,7 +58,7 @@ export default class NavBar extends React.Component {
                     History
                   </DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem>
+                  <DropdownItem onClick={this.onLogout}>
                     Sign out
                   </DropdownItem>
                 </DropdownMenu>
@@ -63,3 +70,5 @@ export default class NavBar extends React.Component {
     );
   }
 }
+
+export default connect()(NavBar)
