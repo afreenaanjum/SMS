@@ -5,7 +5,7 @@ import { socket } from '../../App'
 import ReactPlayer from 'react-player'
 import Duration from '../Duration'
 import { connect } from 'react-redux';
-import { playing, addUrl, played, duration, seeking, onprogress, host } from '../../actions/video'
+import { playing, addUrl, played, duration, seeking, onprogress} from '../../actions/video'
 
 //Icons
 import { FaPlay, FaStop, FaPause, FaSyncAlt } from "react-icons/fa";
@@ -173,10 +173,6 @@ class VideoPlayer extends React.Component {
                                     this.props.dispatch(addUrl(this.urlInput.value))
                                 }}>Load
                             </Button>
-                            <Button onClick={() => {
-                                this.props.dispatch(host(true))
-                            }}>Host
-                            </Button>
                         </InputGroupAddon>
                     </InputGroup>
 
@@ -223,7 +219,6 @@ class VideoPlayer extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log('mapStateToProps', state)
     return {
         url: state.videoPlayer.url,
         playing: state.videoPlayer.playing,

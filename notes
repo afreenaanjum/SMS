@@ -1,0 +1,19 @@
+session 
+
+ -_id
+ - agenda
+ -OTP
+ -videoPlayerDetails
+    url
+    playing
+    played
+    loaded
+    duration
+    elapsed
+    remaining
+ -usersConnected
+    id's
+ -Chat details
+    -messages
+ -filedetails
+  -filepaths
