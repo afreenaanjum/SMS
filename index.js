@@ -9,6 +9,7 @@ const { generateMessage } = require('./client/sms/src/components/Chat/GenerateMe
 
 const app = express()
 const server = http.createServer(app)
+
 const io = socketIo(server)
 
 // Serve static files from the React app
@@ -79,8 +80,6 @@ app.use('/', router)
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname + "/client/sms/build/index.html"))
 })
-
-
 
 const port = process.env.PORT || 3005
 
