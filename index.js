@@ -9,6 +9,7 @@ const { generateMessage } = require('./client/sms/src/components/Chat/GenerateMe
 
 const app = express()
 const server = http.createServer(app)
+
 const io = socketIo(server)
 
 // Serve static files from the React app

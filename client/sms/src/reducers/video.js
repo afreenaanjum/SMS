@@ -10,7 +10,7 @@ const initialState = {
 const videoPlayerReducer = (state = initialState, action) => {
     switch (action.type) {
         case "URL":
-            return { ...state, ...{ url: action.payload } }
+            return { ...state, url: action.payload }
         case "PLAYING":
             return { ...state, playing: action.payload }
         case "PLAYED":

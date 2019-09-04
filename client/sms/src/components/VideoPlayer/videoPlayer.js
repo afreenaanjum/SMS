@@ -232,7 +232,6 @@ const mapStateToProps = (state) => {
         duration: state.videoPlayer.duration,
         seeking: state.videoPlayer.seeking,
         isHost: state.videoPlayer.isHost,
-
     }
 }
 
