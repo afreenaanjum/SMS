@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "heroku-postbuild": "cd client/sms && npm install && npm run build",
-    "dev": "concurrently \"nodemon index.js \" \"cd client && npm start \" "
+    "dev": "concurrently \"nodemon index.js \" \"cd client/sms && npm start \" "
   },
   "engines": {
     "node": "10.15.3",
