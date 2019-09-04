@@ -2,10 +2,9 @@
 An web application to host short meetings. The motivation behind this is to make people in short gatherings to be provided different facilities.
 
 ## Features
-1. Group file sharing
-2. Synchronous video watching
-3. Instant opinion capturing
-4. Instant group messenger.
+1. Synchronous video watching
+2. Instant group messenger.
+3. Synchronous video watching
 
 ## Technologies
 * Single-page application using __React.js__ and __Redux__.
