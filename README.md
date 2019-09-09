@@ -4,7 +4,7 @@ An web application to host short meetings. The motivation behind this is to make
 ## Features
 1. Synchronous video watching
 2. Instant group messenger.
-3. Synchronous video watching
+
 
 ## Technologies
 * Single-page application using __React.js__ and __Redux__.
