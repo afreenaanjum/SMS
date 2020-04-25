@@ -6,22 +6,24 @@ import { connect } from 'react-redux';
 //App components
 import VideoPlayer from './components/VideoPlayer/videoPlayer'
 import Chat from './components/Chat/Chat'
+import StartPage from './components/startPage';
 
 //Style components
 import NavBar from './components/NavBar'
 import { Container, Row, Col } from 'reactstrap'
 
 // let port = process.env.PORT || 3005
-
+const endpoint = "http://localhost:3005"
 //Setting up sockets on client side
-const socket = io()
+const socket = io(endpoint)
 
 function App(props) {
   return (
     <BrowserRouter>
       <div className='app'>
-        <NavBar />
-        <Container>
+        {/* <NavBar /> */}
+        <StartPage />
+        {/* <Container>
           <Row style={{ margin: "15px" }} />
           <Row>
             <Col sm="8" >
@@ -31,7 +33,7 @@ function App(props) {
               <Chat />
             </Col>
           </Row>
-        </Container>
+        </Container> */}
       </div >
     </BrowserRouter>
   )
