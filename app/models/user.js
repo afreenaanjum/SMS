@@ -90,6 +90,7 @@ userSchema.pre('save', function (next) {
 })
 
 userSchema.statics.findByCredentials = function (value, isEmailOrMobile, password) {
+    console.log(isEmailOrMobile, "sfdsfsdfsdfds", value);
     const User = this
     return User.findOne({ [isEmailOrMobile]: value })
         .then((user) => {
