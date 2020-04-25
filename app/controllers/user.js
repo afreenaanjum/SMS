@@ -5,8 +5,10 @@ const validator = require('validator')
 module.exports.register = function (req, res) {
     const body = req.body
     const user = new User(body)
+    console.log("REGISTERRRRR =>", user);
     user.save()
         .then((user) => {
+            console.log("REGISTERRRRR =>", user);
             res.send({ // This is done because even the encrypted password is not sent
                 _id: user._id,
                 username: user.username,

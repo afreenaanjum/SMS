@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("./config/database");
 const http = require("http");
+const cors = require('cors')
 const path = require("path");
 const socketIo = require("socket.io");
 const router = require("./config/routes");
@@ -12,11 +13,16 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+
+
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "client/sms/build")));
 const publicDirectoryPath = path.join(__dirname, "../public");
+app.use(cors())
 app.use(express.json());
 app.use(express.static(publicDirectoryPath));
+
+app.use("/", router);
 
 var urlServer = null,
   connectionCount = 0,
@@ -78,7 +84,7 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use("/", router);
+
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get("*", (req, res) => {
