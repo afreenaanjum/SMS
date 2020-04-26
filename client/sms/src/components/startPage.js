@@ -248,7 +248,7 @@ class StartPage extends React.Component {
                         <CustomTextField
                           type="text"
                           label="Email/Mobile"
-                          value={confirmPassword}
+                          value={email}
                           onChange={this.handleEmail}
                           notchedOutlineSelect={classes.notchedOutlineSelect}
                           styles={classes.textField}
@@ -258,7 +258,7 @@ class StartPage extends React.Component {
                         <CustomTextField
                           type="password"
                           label="Password"
-                          value={confirmPassword}
+                          value={password}
                           onChange={this.handlePassword}
                           notchedOutlineSelect={classes.notchedOutlineSelect}
                           styles={classes.textField}
