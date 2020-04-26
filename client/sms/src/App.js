@@ -1,26 +1,27 @@
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import io from 'socket.io-client'
-import { connect } from 'react-redux';
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import io from "socket.io-client";
+import { connect } from "react-redux";
+import "./App.css";
 
 //App components
-import VideoPlayer from './components/VideoPlayer/videoPlayer'
-import Chat from './components/Chat/Chat'
-import StartPage from './components/startPage';
+// import VideoPlayer from "./components/VideoPlayer/videoPlayer";
+// import Chat from "./components/Chat/Chat";
+import StartPage from "./components/startPage";
 
 //Style components
-import NavBar from './components/NavBar'
-import { Container, Row, Col } from 'reactstrap'
+// import NavBar from "./components/NavBar";
+// import { Container, Row, Col } from "reactstrap";
 
 // let port = process.env.PORT || 3005
-const endpoint = "http://localhost:3005"
+const endpoint = "http://localhost:3005";
 //Setting up sockets on client side
-const socket = io(endpoint)
+const socket = io(endpoint);
 
 function App(props) {
   return (
     <BrowserRouter>
-      <div className='app'>
+      <div className="App">
         {/* <NavBar /> */}
         <StartPage />
         {/* <Container>
@@ -34,16 +35,16 @@ function App(props) {
             </Col>
           </Row>
         </Container> */}
-      </div >
+      </div>
     </BrowserRouter>
-  )
+  );
 }
 
 const mapStateToProps = (state) => {
   return {
-    isHost: state.videoPlayer.isHost
-  }
-}
-connect(mapStateToProps)(App)
+    isHost: state.videoPlayer.isHost,
+  };
+};
+connect(mapStateToProps)(App);
 
-export { App, socket }
+export { App, socket };
