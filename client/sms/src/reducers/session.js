@@ -1,8 +1,8 @@
 const sessionReducer = (state = {}, action) => {
-    switch (action.type) {
-        default:
-            return state
-    }
-}
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
 
-export default sessionReducer
+export default sessionReducer;

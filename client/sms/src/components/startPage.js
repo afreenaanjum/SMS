@@ -7,8 +7,9 @@ import { compose } from "recompose";
 import styles from "./styles";
 import axios from "../config/axios";
 import CustomTextField from "./CommonComponents/TextField";
-
 import { setAuthToken, getAuthToken } from "../services/localStorage";
+import { connect } from "react-redux";
+import { userDetails } from "../actions/userDetails";
 
 const themeStyles = (theme) => {
   return styles(theme);
@@ -38,7 +39,7 @@ class StartPage extends React.Component {
 
   componentDidMount() {
     if (getAuthToken()) {
-      this.props.history.push('/homepage');
+      this.props.history.push("/homepage");
     }
   }
 
@@ -65,16 +66,16 @@ class StartPage extends React.Component {
       password: this.state.password,
     };
     axios.post("/sms/users/login", formData).then((response) => {
-      // console.log(response.data);
       if (response.data.hasOwnProperty("errors")) {
         alert(response.data.message);
       }
-      setAuthToken(response.data);
+      setAuthToken(response.data.token);
       this.setState({
         email: "",
-        password: ""
-      })
-      this.props.history.push('/homepage');
+        password: "",
+      });
+      this.props.dispatch(userDetails(response.data.user));
+      this.props.history.push("/homepage");
     });
   }
 
@@ -302,4 +303,5 @@ class StartPage extends React.Component {
     );
   }
 }
-export default compose(withStyles(themeStyles))(StartPage);
+
+export default compose(connect(), withStyles(themeStyles))(StartPage);
