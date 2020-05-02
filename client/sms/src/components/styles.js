@@ -1,15 +1,25 @@
-import { red } from "@material-ui/core/colors";
-
-const font = "Lato, sans-serif";
 const styles = (theme) => ({
-    notchedOutlineSelect: {
-        borderColor: "#E45FFF !important",
+  notchedOutlineSelect: {
+    borderColor: "#E45FFF !important",
+  },
+  button: {
+    backgroundColor: "#7303c0",
+    color: "white",
+    marginTop: "10px",
+    marginBottom: "10px",
+  },
+  gridPic: {
+    [theme.breakpoints.down("sm")]: {
+      position: "absolute",
+      opacity: "18%",
     },
-    button: {
-        backgroundColor: "#7303c0",
-        color: 'white',
-        marginTop: '10px',
-        marginBottom: '10px'
-    }
-})
+  },
+  textField: {
+    marginTop: "12px",
+  },
+  signInForm: {
+    paddingTop: "78px",
+    paddingBottom: "78px",
+  },
+});
 export default styles;
