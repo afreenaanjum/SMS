@@ -28,7 +28,7 @@ class StartPage extends React.Component {
       confirmPassword: "",
     };
     this.handleSignUp = this.handleSignUp.bind(this);
-    this.handleSignIn = this.handleSignIn.bind(this);
+    this.toggleSignIn = this.toggleSignIn.bind(this);
     this.handleUserName = this.handleUserName.bind(this);
     this.handleMobile = this.handleMobile.bind(this);
     this.handleEmail = this.handleEmail.bind(this);
@@ -65,21 +65,28 @@ class StartPage extends React.Component {
       mobileOrEmail: this.state.email,
       password: this.state.password,
     };
-    axios.post("/sms/users/login", formData).then((response) => {
-      if (response.data.hasOwnProperty("errors")) {
-        alert(response.data.message);
-      }
-      setAuthToken(response.data.token);
-      this.setState({
-        email: "",
-        password: "",
+    axios.post("/sms/users/login", formData)
+      .then((response) => {
+        console.log(response)
+        // if (response.data.hasOwnProperty("errors")) {
+        //   alert(response.data.message);
+        // }
+        setAuthToken(response.data.token);
+        this.setState({
+          email: "",
+          password: "",
+        });
+        this.props.dispatch(userDetails(response.data.user));
+        this.props.history.push("/homepage");
+
+      })
+      .catch((err) => {
+        console.log(err.response);
+        alert(err.response.data)
       });
-      this.props.dispatch(userDetails(response.data.user));
-      this.props.history.push("/homepage");
-    });
   }
 
-  handleSignIn() {
+  toggleSignIn() {
     this.setState((prevState) => {
       return { isSignedIn: !prevState.isSignedIn };
     });
@@ -251,7 +258,7 @@ class StartPage extends React.Component {
                         Sign Up
                       </Button>
                     </form>
-                    <Link href="#" onClick={this.handleSignIn}>
+                    <Link href="#" onClick={this.toggleSignIn}>
                       {"Already had account?"}
                     </Link>
                   </>
@@ -290,7 +297,7 @@ class StartPage extends React.Component {
                         Sign In
                       </Button>
                     </form>
-                    <Link href="#" onClick={this.handleSignIn}>
+                    <Link href="#" onClick={this.toggleSignIn}>
                       {"Had no account?"}
                     </Link>
                   </>

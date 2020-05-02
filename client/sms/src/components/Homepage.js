@@ -34,14 +34,12 @@ class Homepage extends React.Component {
       .post("/sms/session/create", formData, { headers: headers })
       .then(
         (response) => {
-          console.log("creattetetettetete", response);
           this.props.dispatch(host(true));
           this.props.history.push("/session");
         },
         (err) => alert(err.response.data.message)
       )
       .catch((errObject) => {
-        console.log("creattetetettetete", errObject.response);
         alert(errObject);
       });
   };

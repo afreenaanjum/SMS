@@ -43,6 +43,7 @@ function App() {
         });
     }
   });
+
   return (
     <BrowserRouter>
       <div className="App">
@@ -59,6 +60,7 @@ const mapStateToProps = (state) => {
     isHost: state.videoPlayer.isHost,
   };
 };
+
 connect(mapStateToProps)(App);
 
 export { App, socket };
