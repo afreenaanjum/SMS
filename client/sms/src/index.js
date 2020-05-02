@@ -17,6 +17,8 @@ store.subscribe(() => {
 
 console.log(store.getState())
 
+
+
 const jsx = (
     <Provider store={store}>
         <AppContainer>

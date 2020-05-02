@@ -8,6 +8,8 @@ import styles from "./styles";
 import axios from "../config/axios";
 import CustomTextField from "./CommonComponents/TextField";
 
+import { setAuthToken, getAuthToken } from "../services/localStorage";
+
 const themeStyles = (theme) => {
   return styles(theme);
 };
@@ -34,6 +36,12 @@ class StartPage extends React.Component {
     this.handleLogin = this.handleLogin.bind(this);
   }
 
+  componentDidMount() {
+    if (getAuthToken()) {
+      this.props.history.push('/homepage');
+    }
+  }
+
   handleSignUp(e) {
     e.preventDefault();
     const formData = {
@@ -57,10 +65,16 @@ class StartPage extends React.Component {
       password: this.state.password,
     };
     axios.post("/sms/users/login", formData).then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       if (response.data.hasOwnProperty("errors")) {
         alert(response.data.message);
       }
+      setAuthToken(response.data);
+      this.setState({
+        email: "",
+        password: ""
+      })
+      this.props.history.push('/homepage');
     });
   }
 

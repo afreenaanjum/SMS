@@ -5,12 +5,12 @@ import { connect } from 'react-redux';
 // style components
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, Input, FormGroup } from 'reactstrap';
 
-class Register extends React.Component {
+class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
-      details: { }
+      details: {}
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -25,7 +25,7 @@ class Register extends React.Component {
     let updateDetails = Object.assign({}, this.state.details);
     updateDetails[event.target.id] = event.target.value;
     this.setState({
-        details: updateDetails   
+      details: updateDetails
     });
   }
 
@@ -42,24 +42,24 @@ class Register extends React.Component {
           <ModalHeader toggle={this.toggle}>Login Form</ModalHeader>
           <ModalBody>
             <Form id="login">
-                <FormGroup>
-                    <Input 
-                        type="text" 
-                        name="mobileOrEmail" 
-                        id="mobileOrEmail"
-                        onChange={this.updateDetail}
-                        required 
-                        placeholder="Email or Mobile" />
-                </FormGroup>
-                <FormGroup>
-                    <Input 
-                        type="password" 
-                        name="password" 
-                        id="password"
-                        onChange={this.updateDetail}
-                        required 
-                        placeholder="Password" />
-                </FormGroup>
+              <FormGroup>
+                <Input
+                  type="text"
+                  name="mobileOrEmail"
+                  id="mobileOrEmail"
+                  onChange={this.updateDetail}
+                  required
+                  placeholder="Email or Mobile" />
+              </FormGroup>
+              <FormGroup>
+                <Input
+                  type="password"
+                  name="password"
+                  id="password"
+                  onChange={this.updateDetail}
+                  required
+                  placeholder="Password" />
+              </FormGroup>
             </Form>
           </ModalBody>
           <ModalFooter>
@@ -72,4 +72,4 @@ class Register extends React.Component {
   }
 }
 
-export default connect()(Register);
+export default connect()(Login);

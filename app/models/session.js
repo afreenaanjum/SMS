@@ -26,13 +26,18 @@ const sessionSchema = new Schema({
             type: Number
         }
     }],
-    users : {
+    users: [{
+        ref: 'User',
+        type: Schema.Types.ObjectId,
+    }],
+    createdBy: {
         ref: 'User',
         type: Schema.Types.ObjectId
     },
-    files: [{
-        type: String
-    }],
+    currentPlayer: {
+        type: String,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now()

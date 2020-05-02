@@ -2,6 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { addUrl, host } from '../actions/video'
 import NavBar from './NavBar'
+import { socket } from '../App'
+import { getAuthToken } from '../services/localStorage';
+import axios from "../config/axios";
 
 
 
@@ -20,6 +23,35 @@ class Homepage extends React.Component {
     //     e.persist()
     //     this.setState({[e.target.name] : e.target.value})
     // }
+    handleOnClickHost = () => {
+        const { url, room } = this.state;
+
+        const formData = {
+            video: { url: url },
+            room: room,
+        };
+        const headers = {
+            'Content-Type': 'application/json',
+            'x-auth': getAuthToken()["token"]
+        }
+        axios.post('/sms/session/create', formData, { headers: headers })
+            .then(response => {
+                console.log("creattetetettetete", response);
+                this.props.dispatch(host(true))
+                this.props.history.push('/session')
+            }, (err) => alert(err.response.data.message))
+            .catch((errObject) => {
+                console.log("creattetetettetete", errObject.response)
+                alert(errObject);
+            })
+    }
+
+
+    handleRoomName = (e) => {
+        this.setState({
+            roomName: e.target.value
+        })
+    }
 
 
     render() {
@@ -30,13 +62,8 @@ class Homepage extends React.Component {
 
                 <h4>Host Session</h4>
                 <input type='text' name='url' placeholder='URL' ref={input => { this.urlInput = input }} onChange={() => { this.props.dispatch(addUrl(this.urlInput.value)) }} />
-                <input type='text' placeholder='Room name' value={this.state.roomName} />
-                <button
-                    onClick={(e) => {
-                        this.props.dispatch(host(true))
-                        this.props.history.push('/sessions')
-                    }}>Host
-                    </button>
+                <input type='text' placeholder='Room name' value={this.state.roomName} onChange={(e) => this.handleRoomName(e)} />
+                <button onClick={this.handleOnClickHost}>Host</button>
 
                 <h4>Join Session</h4>
                 <input type='text' placeholder='email' value={this.state.email} />

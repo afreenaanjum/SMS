@@ -5,7 +5,7 @@ import { socket } from '../../App'
 import ReactPlayer from 'react-player'
 import Duration from '../Duration'
 import { connect } from 'react-redux';
-import { playing, addUrl, played, duration, seeking, onprogress} from '../../actions/video'
+import { playing, addUrl, played, duration, seeking, onprogress, host } from '../../actions/video'
 
 //Icons
 import { FaPlay, FaStop, FaPause, FaSyncAlt } from "react-icons/fa";
@@ -24,6 +24,7 @@ import {
 
 class VideoPlayer extends React.Component {
     componentDidMount() {
+
         //Listening to the new playing state
         socket.on('playState', (playState) => {
             this.props.dispatch(playing(playState))
@@ -84,13 +85,14 @@ class VideoPlayer extends React.Component {
 
     onProgress = state => {
         console.log('onProgress', state)
-
+        console.log("scoket fsjhdjskdfkajsd ", socket.id);
         // We only want to update time slider if we are not currently seeking
         if (!this.props.seeking) {
             this.props.dispatch(onprogress(state))
         }
 
         if (this.props.isHost) {
+            console.log("ishosttt", this.props.isHost, socket.id)
             socket.emit('onProgress', state)
         }
     }
@@ -173,10 +175,15 @@ class VideoPlayer extends React.Component {
                                     this.props.dispatch(addUrl(this.urlInput.value))
                                 }}>Load
                             </Button>
+                            <Button onClick=
+                                {() => {
+                                    this.props.dispatch(host(true))
+                                }}>Host
+                            </Button>
                         </InputGroupAddon>
                     </InputGroup>
 
-                    <Card style={{ margin: "50px", padding: "10px" }}>
+                    {/* {/* <Card style={{ margin: "50px", padding: "10px" }}>
                         <h2>State</h2>
                         <table><tbody>
                             <tr>
@@ -210,7 +217,7 @@ class VideoPlayer extends React.Component {
                                 <td><Duration seconds={this.props.duration * (1 - this.props.played)} /></td>
                             </tr>
                         </tbody></table>
-                    </Card>
+                    </Card> */}
                 </section>
             </div >
         )

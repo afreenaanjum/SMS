@@ -1,6 +1,7 @@
 const { User } = require('../models/user')
 
 const authenticateUser = function (req, res, next) {
+    // console.log(req);
     const token = req.header('x-auth')
     User.findByToken(token)
         .then((user) => {
@@ -14,7 +15,9 @@ const authenticateUser = function (req, res, next) {
             }
         })
         .catch((err) => {
-            res.status('401').send(err)
+            console.log("vatchhhhh");
+            const errorData = { message: 'Unauthorised user. Please login again!' }
+            res.status('401').json(errorData);
         })
 }
 

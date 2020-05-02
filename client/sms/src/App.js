@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import io from "socket.io-client";
 import { connect } from "react-redux";
 import "./App.css";
@@ -7,7 +7,10 @@ import "./App.css";
 //App components
 // import VideoPlayer from "./components/VideoPlayer/videoPlayer";
 // import Chat from "./components/Chat/Chat";
-import StartPage from "./components/startPage";
+import StartPage from "./components/StartPage";
+import Homepage from "./components/Homepage";
+import ProtectedRoutes from "./ProtectedRoutes";
+import SessionPage from "./components/SessionPage";
 
 //Style components
 // import NavBar from "./components/NavBar";
@@ -18,24 +21,15 @@ const endpoint = "http://localhost:3005";
 //Setting up sockets on client side
 const socket = io(endpoint);
 
+
 function App(props) {
-  console.log(props.loggedIn)
+  console.log(props.loggedIn);
   return (
     <BrowserRouter>
       <div className="App">
-        {/* <NavBar /> */}
-        <StartPage />
-        {/* <Container>
-          <Row style={{ margin: "15px" }} />
-          <Row>
-            <Col sm="8" >
-              <VideoPlayer />
-            </Col>
-            <Col sm="4" >
-              <Chat />
-            </Col>
-          </Row>
-        </Container> */}
+        <Route path='/' component={StartPage} exact={true} />
+        <ProtectedRoutes path='/homepage' Comp={Homepage} exact={true} />
+        <ProtectedRoutes path='/session' Comp={SessionPage} exact={true} />
       </div>
     </BrowserRouter>
   );
