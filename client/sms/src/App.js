@@ -32,6 +32,7 @@ function App() {
           const userData = res.data;
           dispatch(
             userDetails({
+              _id: userData._id,
               userName: userData.username,
               email: userData.email,
               mobile: userData.mobile,
@@ -49,7 +50,7 @@ function App() {
       <div className="App">
         <Route path="/" component={StartPage} exact={true} />
         <ProtectedRoutes path="/homepage" Comp={Homepage} exact={true} />
-        <ProtectedRoutes path="/session" Comp={SessionPage} exact={true} />
+        <ProtectedRoutes path="/session/:id" Comp={SessionPage} exact={true} />
       </div>
     </BrowserRouter>
   );

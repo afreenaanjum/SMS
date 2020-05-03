@@ -10,7 +10,7 @@ class Register extends React.Component {
     super(props);
     this.state = {
       modal: false,
-      details: { }
+      details: {}
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -21,67 +21,77 @@ class Register extends React.Component {
     }));
   }
 
-  updateDetail = (event) => {
-    let updateDetails = Object.assign({}, this.state.details);
-    updateDetails[event.target.id] = event.target.value;
-    this.setState({
-        details: updateDetails   
-    });
-  }
-
-  onSubmit = () => {
-    this.props.dispatch(submitRegister(this.state.details));
-    this.toggle()
-  }
-
   render() {
     return (
-      <div>
-        <Button color="danger" onClick={this.toggle}>Register</Button>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-          <ModalHeader toggle={this.toggle}>Register Form</ModalHeader>
-          <ModalBody>
-            <Form id="register">
-                <FormGroup>
-                    <Input 
-                        type="text" 
-                        name="username" 
-                        id="username"
-                        onChange={this.updateDetail} 
-                        placeholder="Name" />
-                </FormGroup>
-                <FormGroup>
-                    <Input 
-                        type="text" 
-                        name="email" 
-                        id="email"
-                        onChange={this.updateDetail} 
-                        placeholder="Email" />
-                </FormGroup>
-                <FormGroup>
-                    <Input 
-                        type="text" 
-                        name="mobile" 
-                        id="mobile"
-                        onChange={this.updateDetail} 
-                        placeholder="mobile" />
-                </FormGroup>
-                <FormGroup>
-                    <Input 
-                        type="password" 
-                        name="password" 
-                        id="password"
-                        onChange={this.updateDetail} 
-                        placeholder="password" />
-                </FormGroup>
-            </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button form="register" color="primary" onClick={this.onSubmit}>Submit</Button>{' '}
-            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-          </ModalFooter>
-        </Modal>
-      </div>
+      <form>
+        <div>
+          <CustomTextField
+            type="text"
+            label="User Name"
+            value={userName}
+            onChange={this.handleUserName}
+            notchedOutlineSelect={classes.notchedOutlineSelect}
+            inputStyles={classes.textField}
+            styles={classes.textField}
+          />
+        </div>
+        <div>
+          <CustomTextField
+            type="text"
+            label="Email"
+            value={email}
+            onChange={this.handleEmail}
+            notchedOutlineSelect={classes.notchedOutlineSelect}
+            styles={classes.textField}
+          />
+        </div>
+        <div>
+          <CustomTextField
+            type="text"
+            label="Mobile"
+            value={mobileNumber}
+            onChange={this.handleMobile}
+            notchedOutlineSelect={classes.notchedOutlineSelect}
+            styles={classes.textField}
+          />
+        </div>
+        <div>
+          <CustomTextField
+            type="password"
+            label="Password"
+            value={password}
+            onChange={this.handlePassword}
+            notchedOutlineSelect={classes.notchedOutlineSelect}
+            styles={classes.textField}
+          />
+        </div>
+        <div>
+          <CustomTextField
+            type="password"
+            label="Confirm Password"
+            value={confirmPassword}
+            onChange={this.handleConfirmPassword}
+            notchedOutlineSelect={classes.notchedOutlineSelect}
+            styles={classes.textField}
+          />
+        </div>
+        <Button
+          disabled={
+            !userName ||
+            !email ||
+            !mobileNumber ||
+            !password ||
+            password !== confirmPassword
+          }
+          type="submit"
+          onClick={(e) => this.handleSignUp(e)}
+          classes={{
+            root: classes.button,
+          }}
+        >
+          Sign Up
+                      </Button>
+      </form>
     );
   }
 }

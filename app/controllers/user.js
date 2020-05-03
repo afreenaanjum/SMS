@@ -45,6 +45,7 @@ module.exports.login = function (req, res) {
       res.send({
         token: token, //token is string, so we are sending it as an object, because axios cant read it from x-auth headers field
         user: {
+          _id: userDetails._id,
           userName: userDetails.username,
           email: userDetails.email,
           mobile: userDetails.mobile,
@@ -61,6 +62,30 @@ module.exports.login = function (req, res) {
 module.exports.account = function (req, res) {
   const { user } = req;
   res.send(user);
+};
+
+module.exports.addSessionDetails = function (req, res) {
+  const { user, session } = req.body;
+  const { asHost, asMember } = session;
+  User.findById(user.id)
+    .then((user) => {
+      if (asHost) {
+        user.asHost.push(asHost);
+      } else {
+        user.asMember.push(asMember);
+      }
+      return user
+        .save()
+        .then((user) => {
+          return Promise.resolve(session);
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+    })
+    .catch((err) => {
+      return Promise.reject(err);
+    });
 };
 
 //sms/users/logout

@@ -49,6 +49,30 @@ const userSchema = new Schema({
       },
     },
   ],
+  asMember: [
+    {
+      session: {
+        ref: "Session",
+        type: Schema.Types.ObjectId,
+      },
+      joinedAt: {
+        type: Date,
+        default: Date.now(),
+      },
+    },
+  ],
+  asHost: [
+    {
+      session: {
+        ref: "Session",
+        type: Schema.Types.ObjectId,
+      },
+      joinedAt: {
+        type: Date,
+        default: Date.now(),
+      },
+    },
+  ],
 });
 
 userSchema.methods.generateToken = function () {

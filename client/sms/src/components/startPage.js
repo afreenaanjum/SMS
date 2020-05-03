@@ -1,3 +1,4 @@
+/* TODO : Forgot password and front end validations*/
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
@@ -51,12 +52,17 @@ class StartPage extends React.Component {
       mobile: this.state.mobileNumber,
       password: this.state.password,
     };
-    axios.post("/sms/users/register", formData).then((response) => {
-      console.log(response.data);
-      if (response.data.hasOwnProperty("errors")) {
-        alert(response.data.message);
-      }
-    });
+    axios
+      .post("/sms/users/register", formData)
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.hasOwnProperty("errors")) {
+          alert(response.data.message);
+        }
+      })
+      .catch((err) => {
+        alert(err.response.data.message);
+      });
   }
 
   handleLogin(e) {
@@ -65,12 +71,10 @@ class StartPage extends React.Component {
       mobileOrEmail: this.state.email,
       password: this.state.password,
     };
-    axios.post("/sms/users/login", formData)
+    axios
+      .post("/sms/users/login", formData)
       .then((response) => {
-        console.log(response)
-        // if (response.data.hasOwnProperty("errors")) {
-        //   alert(response.data.message);
-        // }
+        console.log(response);
         setAuthToken(response.data.token);
         this.setState({
           email: "",
@@ -78,11 +82,10 @@ class StartPage extends React.Component {
         });
         this.props.dispatch(userDetails(response.data.user));
         this.props.history.push("/homepage");
-
       })
       .catch((err) => {
         console.log(err.response);
-        alert(err.response.data)
+        alert(err.response.data.message);
       });
   }
 
@@ -110,10 +113,6 @@ class StartPage extends React.Component {
 
   handleConfirmPassword(e) {
     this.setState({ confirmPassword: e.target.value });
-  }
-
-  handleRegister() {
-    console.log("Reigster madi");
   }
 
   render() {

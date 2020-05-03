@@ -7,6 +7,11 @@ const sessionController = require("../app/controllers/session");
 
 router.post("/sms/users/register", userController.register);
 router.post("/sms/users/login", userController.login);
+router.post(
+  "/sms/users/sessions",
+  authenticateUser,
+  userController.addSessionDetails
+);
 router.get("/sms/users/account", authenticateUser, userController.account);
 router.post("/sms/users/logout", authenticateUser, userController.logout);
 

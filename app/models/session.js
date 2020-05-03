@@ -6,7 +6,6 @@ const sessionSchema = new Schema({
   room: {
     type: String,
     required: true,
-    unique: true,
   },
   video: [
     {
@@ -30,13 +29,19 @@ const sessionSchema = new Schema({
   ],
   users: [
     {
-      ref: "User",
-      type: Schema.Types.ObjectId,
+      user: {
+        ref: "User",
+        type: Schema.Types.ObjectId,
+      },
+      status: {
+        type: Boolean,
+      },
     },
   ],
   createdBy: {
     ref: "User",
     type: Schema.Types.ObjectId,
+    required: true,
   },
   currentPlayer: {
     type: String,

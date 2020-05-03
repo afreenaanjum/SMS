@@ -16,33 +16,64 @@ class Homepage extends React.Component {
       roomName: "",
     };
   }
-  // handleChange(e){
-  //     e.persist()
-  //     this.setState({[e.target.name] : e.target.value})
-  // }
+
   handleOnClickHost = () => {
-    const { url, room } = this.state;
+    const { url, roomName } = this.state;
+    console.log(socket.id);
     const formData = {
       video: { url: url },
-      room: room,
+      room: roomName,
+      createdBy: this.props.userDetails._id,
+      currentPlayer: socket.id,
+      users: { user: this.props.userDetails._id, status: true },
     };
     const headers = {
       "Content-Type": "application/json",
-      "x-auth": getAuthToken()["token"],
+      "x-auth": getAuthToken(),
     };
     axios
       .post("/sms/session/create", formData, { headers: headers })
-      .then(
-        (response) => {
-          this.props.dispatch(host(true));
-          this.props.history.push("/session");
-        },
-        (err) => alert(err.response.data.message)
-      )
-      .catch((errObject) => {
-        alert(errObject);
+      .then((response) => {
+        axios
+          .post(
+            `/sms/users/sessions`,
+            {
+              user: { id: this.props.userDetails._id },
+              session: { asHost: { session: response.data.id } },
+            },
+            { headers: headers }
+          )
+          .then((response) => {})
+          .catch((err) => {
+            alert(err.response.data.message);
+          });
+        this.props.dispatch(host(true));
+        this.props.history.push("/session/");
+      })
+      .catch((err) => {
+        alert(err.response.data.message);
       });
   };
+
+  // handleOnClickJoin = () => {
+  //   const headers = {
+  //     "Content-Type": "application/json",
+  //     "x-auth": getAuthToken(),
+  //   };
+  //   axios
+  //     .post(
+  //       `/sms/users/sessions`,
+  //       {
+  //         user: { id: this.props.userDetails._id },
+  //         session: { asMember: { session: response.data.id } },
+  //       },
+  //       { headers: headers }
+  //     )
+  //     .then((response) => {})
+  //     .catch((err) => {
+  //       alert(err.response.data.message);
+  //     });
+  // };
 
   handleRoomName = (e) => {
     this.setState({
@@ -92,6 +123,7 @@ class Homepage extends React.Component {
 const mapStateToProps = (state) => {
   return {
     url: state.videoPlayer.url,
+    room: state.videoPlayer.roomName,
     isHost: state.videoPlayer.isHost,
     userDetails: state.userDetails,
   };
