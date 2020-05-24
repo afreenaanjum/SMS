@@ -17,6 +17,8 @@ class Homepage extends React.Component {
     };
   }
 
+  componentDidMount() {}
+
   handleOnClickHost = () => {
     const { url, roomName } = this.state;
     console.log(socket.id);
@@ -45,39 +47,35 @@ class Homepage extends React.Component {
           )
           .then((response) => {})
           .catch((err) => {
-            alert(err.response.data.message);
+            console.log("Hojmepgaggeeee", err);
+            // alert(err.response.data.message);
           });
+        socket.emit("join", { roomId: response.data.id, isHost: true });
         this.props.dispatch(host(true));
-        this.props.history.push("/session/");
+        this.props.history.push({
+          pathname: `/session/${response.data.id}`,
+          state: { isHost: true },
+        });
       })
       .catch((err) => {
         alert(err.response.data.message);
       });
   };
 
-  // handleOnClickJoin = () => {
-  //   const headers = {
-  //     "Content-Type": "application/json",
-  //     "x-auth": getAuthToken(),
-  //   };
-  //   axios
-  //     .post(
-  //       `/sms/users/sessions`,
-  //       {
-  //         user: { id: this.props.userDetails._id },
-  //         session: { asMember: { session: response.data.id } },
-  //       },
-  //       { headers: headers }
-  //     )
-  //     .then((response) => {})
-  //     .catch((err) => {
-  //       alert(err.response.data.message);
-  //     });
-  // };
+  handleOnClickJoin = () => {
+    this.props.history.push(`/session/${this.state.room}`);
+    socket.emit("join", { roomId: this.state.room });
+  };
 
   handleRoomName = (e) => {
     this.setState({
       roomName: e.target.value,
+    });
+  };
+
+  handleRoom = (e) => {
+    this.setState({
+      room: e.target.value,
     });
   };
 
@@ -112,9 +110,10 @@ class Homepage extends React.Component {
         <input
           type="text"
           placeholder="Enter Room Name"
-          value={this.state.roomName}
+          value={this.state.room}
+          onChange={(e) => this.handleRoom(e)}
         />
-        <button>Join</button>
+        <button onClick={this.handleOnClickJoin}>Join</button>
       </div>
     );
   }

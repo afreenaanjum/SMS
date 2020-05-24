@@ -5,6 +5,7 @@ import { socket } from "../../App";
 import ReactPlayer from "react-player";
 import Duration from "../Duration";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import {
   playing,
   addUrl,
@@ -31,11 +32,21 @@ import {
 } from "reactstrap";
 
 class VideoPlayer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      room: this.props.match.params.id,
+    };
+  }
   componentDidMount() {
+    //On joining, get the current state
+    socket.emit("getPlayState", { roomId: this.state.room });
+
     //Listening to the new playing state
-    socket.on("playState", (playState) => {
+    socket.on("updatedPlayState", (playState) => {
       this.props.dispatch(playing(playState));
     });
+
     //When someone enters custom url and loads it, same URL is listened by all
     socket.on("updateURL", (url) => {
       this.props.dispatch(addUrl(url));
@@ -43,25 +54,39 @@ class VideoPlayer extends React.Component {
 
     // When a new user joins to an existing session the URL is fetched by listening to the socket
     socket.on("newConnection", ({ url, playStateServer }) => {
-      this.props.dispatch(addUrl(url));
       this.props.dispatch(playing(playStateServer));
+      this.props.dispatch(addUrl(url));
     });
 
     //Keeps in sync with host
     socket.on("sync", ({ played, url }) => {
+      console.log("su=ynncpmponent did muount");
       this.props.dispatch(addUrl(url));
       this.player.seekTo(played, "fraction");
+    });
+
+    socket.on("updateOnStopButton", ({ playStateServer, url }) => {
+      console.log("updtaeURLONSTOP", url);
+      this.props.dispatch(addUrl(url));
+      this.props.dispatch(playing(playStateServer));
     });
   }
 
   playPause = () => {
-    const currentState = !this.props.playing;
+    const currentPlayingState = !this.props.playing;
     // If a user in the session is clicking on the playPause button the state is emitted to the server
-    socket.emit("playPause", currentState);
-    this.props.dispatch(playing(currentState));
+    socket.emit("onClickPlayPause", {
+      currentPlayingState,
+      roomId: this.state.room,
+    });
+    this.props.dispatch(playing(currentPlayingState));
   };
 
   stop = () => {
+    if (this.props.isHost)
+      socket.emit("onClickStop", {
+        roomId: this.state.room,
+      });
     this.props.dispatch(addUrl(null));
     this.props.dispatch(playing(false));
   };
@@ -90,16 +115,14 @@ class VideoPlayer extends React.Component {
   };
 
   onProgress = (state) => {
-    console.log("onProgress", state);
-    console.log("scoket fsjhdjskdfkajsd ", socket.id);
     // We only want to update time slider if we are not currently seeking
     if (!this.props.seeking) {
       this.props.dispatch(onprogress(state));
     }
 
     if (this.props.isHost) {
-      console.log("ishosttt", this.props.isHost, socket.id);
-      socket.emit("onProgress", state);
+      // console.log("ishosttt", this.props.isHost, socket.id);
+      socket.emit("onProgress", { state: state, roomId: this.state.room });
     }
   };
   onEnded = () => {
@@ -134,7 +157,7 @@ class VideoPlayer extends React.Component {
           >
             <div className="player-wrapper">
               <ReactPlayer
-                ref={this.ref}
+                // ref={this.ref}
                 className="react-player"
                 width="100%"
                 height="100%"
@@ -202,58 +225,26 @@ class VideoPlayer extends React.Component {
             <InputGroupAddon addonType="append">
               <Button
                 onClick={() => {
+                  // console.log("ref play pause", this.urlInput.value);
                   //Emitting the URL entered to the server
-                  socket.emit("url", this.urlInput.value);
+                  socket.emit("url", {
+                    url: this.urlInput.value,
+                    roomId: this.state.room,
+                  });
                   this.props.dispatch(addUrl(this.urlInput.value));
                 }}
               >
                 Load
               </Button>
-              <Button
+              {/* <Button
                 onClick={() => {
                   this.props.dispatch(host(true));
                 }}
               >
                 Host
-              </Button>
+              </Button> */}
             </InputGroupAddon>
           </InputGroup>
-
-          {/* {/* <Card style={{ margin: "50px", padding: "10px" }}>
-                        <h2>State</h2>
-                        <table><tbody>
-                            <tr>
-                                <th>url</th>
-                                <td className={!this.props.url ? 'faded' : ''}>
-                                    {this.props.url || 'null'}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>playing</th>
-                                <td>{this.props.playing ? 'true' : 'false'}</td>
-                            </tr>
-                            <tr>
-                                <th>played</th>
-                                <td>{this.props.played.toFixed(3)}</td>
-                            </tr>
-                            <tr>
-                                <th>loaded</th>
-                                <td>{this.props.loaded.toFixed(3)}</td>
-                            </tr>
-                            <tr>
-                                <th>duration</th>
-                                <td><Duration seconds={this.props.duration} /></td>
-                            </tr>
-                            <tr>
-                                <th>elapsed</th>
-                                <td><Duration seconds={this.props.duration * this.props.played} /></td>
-                            </tr>
-                            <tr>
-                                <th>remaining</th>
-                                <td><Duration seconds={this.props.duration * (1 - this.props.played)} /></td>
-                            </tr>
-                        </tbody></table>
-                    </Card> */}
         </section>
       </div>
     );
@@ -272,4 +263,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(VideoPlayer);
+export default connect(mapStateToProps)(withRouter(VideoPlayer));

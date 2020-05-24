@@ -22,63 +22,111 @@ app.use(express.static(publicDirectoryPath));
 
 app.use("/", router);
 
-var urlServer = null,
-  connectionCount = 0,
-  playStateServer = true,
-  playedTimeServer = 0; // URL server has the URL of the existing session
-let connectedUsers = [];
-let messages = [];
+/// {"roomName" : {
+url: "";
+
+/// }}
+
+var currentSessionDetailsOfEveryRoom = {};
+//   connectionCount = 0,
+//   playStateServer = true,
+//   playedTimeServer = 0; // URL server has the URL of the existing session
+// let connectedUsers = [];
+// let roomName = "";
 
 io.on("connection", (socket) => {
-  connectedUsers = [...connectedUsers, socket.id];
-  connectionCount = connectionCount + 1;
+  // connectedUsers = [...connectedUsers, socket.id];
+  // connectionCount = connectionCount + 1;
   console.log("New WebSocket connection");
 
-  socket.broadcast.emit("message", { text: "A new user has joined!" });
+  socket.on("join", ({ roomId, isHost }) => {
+    console.log("joinnnedd isHost ->", isHost, roomId);
+    if (isHost)
+      currentSessionDetailsOfEveryRoom[roomId] = {
+        url: "",
+        playingState: true,
+        playedTime: 0,
+      };
+    socket.join(roomId);
+    socket.to(roomId).emit("message", { text: "A new user has joined!" });
+    console.log("onjoinnnnn", currentSessionDetailsOfEveryRoom[roomId]);
+  });
 
-  socket.on("message", (message) => {
-    messages.push(message);
+  socket.on("message", ({ message, room }) => {
     console.log("server", message, generateMessage(message, socket.id));
-    io.emit("message", generateMessage(message, socket.id));
+    io.in(room).emit("message", generateMessage(message, socket.id));
   });
 
-  socket.on("playPause", (playState) => {
-    playStateServer = playState;
+  socket.on("onClickPlayPause", (data) => {
     //Same playPause state is broadcasted to everyone in that socket
-    socket.broadcast.emit("playState", playState);
+    const { currentPlayingState, roomId } = data;
+    currentSessionDetailsOfEveryRoom[roomId][
+      "playingState"
+    ] = currentPlayingState;
+    socket.to(roomId).emit("updatedPlayState", currentPlayingState);
   });
 
-  socket.on("url", (url) => {
-    urlServer = url;
-    //Same URL is broadcasted to everyone in that socket
-    socket.broadcast.emit("updateURL", url);
+  socket.on("getPlayState", ({ roomId }) => {
+    console.log(
+      "getPlaystatetet deatils 0f all sessions",
+      currentSessionDetailsOfEveryRoom
+    );
+    // This will keep the new users joining existing session updated with the URL
+    if (Object.keys(currentSessionDetailsOfEveryRoom).length != 0)
+      socket.to(roomId).emit("newConnection", {
+        playStateServer:
+          currentSessionDetailsOfEveryRoom[roomId]["playingState"],
+        url: currentSessionDetailsOfEveryRoom[roomId]["url"],
+      });
   });
 
   //It is listening only from host
-  socket.on("onProgress", (state) => {
-    playedTimeServer = state.played;
-    //If user stops the video and host is still playing, to sync it with the host we are doing this
-    socket.broadcast.emit("sync", { played: state.played, url: urlServer });
+  socket.on("onProgress", ({ state, roomId }) => {
+    currentSessionDetailsOfEveryRoom[roomId]["playedTime"] = state.played;
+    //If user pauses the video and host is still playing or viceversa, to sync it with the host we are doing this
+    socket.to(roomId).emit("sync", {
+      played: state.played,
+      url: currentSessionDetailsOfEveryRoom[roomId]["url"],
+    });
   });
 
-  //This will keep the new users joining existing session updated with the URL
-  socket.emit("newConnection", {
-    url: urlServer,
-    playStateServer: playStateServer,
+  socket.on("url", ({ url, roomId }) => {
+    currentSessionDetailsOfEveryRoom[roomId]["url"] = url;
+    console.log(currentSessionDetailsOfEveryRoom[roomId]);
+    //Same URL is broadcasted to everyone in that socket
+    socket.to(roomId).emit("updateURL", url);
+  });
+
+  socket.on("onClickStop", ({ roomId }) => {
+    console.log(
+      "onClickSTop",
+      roomId,
+      currentSessionDetailsOfEveryRoom[roomId]
+    );
+    currentSessionDetailsOfEveryRoom[roomId]["url"] = null;
+    currentSessionDetailsOfEveryRoom[roomId]["playingState"] = false;
+    console.log(
+      "on click stop butomn",
+      currentSessionDetailsOfEveryRoom[roomId]
+    );
+    //Same URL is broadcasted to everyone in that socket
+    socket
+      .to(roomId)
+      .emit("updateOnStopButton", { url: null, playingState: false });
   });
 
   socket.on("disconnect", () => {
-    connectionCount = connectionCount - 1;
-    connectedUsers = connectedUsers.filter((id) => {
-      id !== socket.id;
-    });
+    // connectionCount = connectionCount - 1;
+    // connectedUsers = connectedUsers.filter((id) => {
+    //   id !== socket.id;
+    // });
     console.log("Disconnected");
-    if (connectionCount === 0) {
-      // If there are no users in the session, on new connection again the URL is set to null
-      urlServer = null;
-      playedTimeServer = 0;
-      playStateServer = true;
-    }
+    // if (connectionCount === 0) {
+    //   // If there are no users in the session, on new connection again the URL is set to null
+    //   urlServer = null;
+    //   playedTimeServer = 0;
+    //   playStateServer = true;
+    // }
   });
 });
 
