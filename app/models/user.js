@@ -26,6 +26,7 @@ const userSchema = new Schema({
     },
   },
   mobile: {
+    //TODO :mobileNumber
     type: String,
     required: true,
     unique: true,
@@ -50,6 +51,7 @@ const userSchema = new Schema({
     },
   ],
   asMember: [
+    // TODO : memberSessions
     {
       session: {
         ref: "Session",
@@ -62,6 +64,7 @@ const userSchema = new Schema({
     },
   ],
   asHost: [
+    // TODO : hostedSessions
     {
       session: {
         ref: "Session",

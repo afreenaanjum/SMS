@@ -32,7 +32,7 @@ module.exports.login = function (req, res) {
   var isEmailOrMobile = "";
   var userDetails = {};
   if (validator.isEmail(body.mobileOrEmail)) {
-    isEmailOrMobile = "email";
+    isEmailOrMobile = "email"; //TODO : userNameType
   } else {
     isEmailOrMobile = "mobile";
   }

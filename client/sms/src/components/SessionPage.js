@@ -14,7 +14,7 @@ function SessionPage(props) {
   useEffect(() => {
     console.log("useEffectttt", props);
     //For duplicating the tabs, the join event is emitted!
-    socket.emit("join", {
+  socket.emit("join", {
       roomId: props.match.params.id,
       isHost: props.location.state ? props.location.state.isHost : false,
     });

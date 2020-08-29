@@ -28,7 +28,8 @@ module.exports.getSessionDetails = function (req, res) {
     .then((session) => {
       console.log("GET DETAILS =>", session);
       res.send({
-        room: session.room,
+        // room: session.room,
+        // id : sess
       });
     })
     .catch((err) => {

@@ -15,6 +15,7 @@ router.post(
 router.get("/sms/users/account", authenticateUser, userController.account);
 router.post("/sms/users/logout", authenticateUser, userController.logout);
 
+//Needs to be changed
 router.post(
   "/sms/session/create",
   authenticateUser,

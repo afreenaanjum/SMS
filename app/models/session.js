@@ -44,6 +44,7 @@ const sessionSchema = new Schema({
     required: true,
   },
   currentPlayer: {
+    // TODO : changed name cureentPlayerSocketId
     type: String,
     required: true,
   },

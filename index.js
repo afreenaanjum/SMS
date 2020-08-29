@@ -22,34 +22,22 @@ app.use(express.static(publicDirectoryPath));
 
 app.use("/", router);
 
-/// {"roomName" : {
-url: "";
-
-/// }}
-
-var currentSessionDetailsOfEveryRoom = {};
-//   connectionCount = 0,
-//   playStateServer = true,
-//   playedTimeServer = 0; // URL server has the URL of the existing session
-// let connectedUsers = [];
-// let roomName = "";
+var allSessionDetails = {}; // TODO : change allSessionDetails
 
 io.on("connection", (socket) => {
-  // connectedUsers = [...connectedUsers, socket.id];
-  // connectionCount = connectionCount + 1;
   console.log("New WebSocket connection");
 
   socket.on("join", ({ roomId, isHost }) => {
     console.log("joinnnedd isHost ->", isHost, roomId);
     if (isHost)
-      currentSessionDetailsOfEveryRoom[roomId] = {
+      allSessionDetails[roomId] = {
         url: "",
         playingState: true,
         playedTime: 0,
       };
     socket.join(roomId);
     socket.to(roomId).emit("message", { text: "A new user has joined!" });
-    console.log("onjoinnnnn", currentSessionDetailsOfEveryRoom[roomId]);
+    console.log("onjoinnnnn", allSessionDetails[roomId]);
   });
 
   socket.on("message", ({ message, room }) => {
@@ -60,55 +48,42 @@ io.on("connection", (socket) => {
   socket.on("onClickPlayPause", (data) => {
     //Same playPause state is broadcasted to everyone in that socket
     const { currentPlayingState, roomId } = data;
-    currentSessionDetailsOfEveryRoom[roomId][
-      "playingState"
-    ] = currentPlayingState;
+    allSessionDetails[roomId]["playingState"] = currentPlayingState;
     socket.to(roomId).emit("updatedPlayState", currentPlayingState);
   });
 
   socket.on("getPlayState", ({ roomId }) => {
-    console.log(
-      "getPlaystatetet deatils 0f all sessions",
-      currentSessionDetailsOfEveryRoom
-    );
+    console.log("getPlaystatetet deatils 0f all sessions", allSessionDetails);
     // This will keep the new users joining existing session updated with the URL
-    if (Object.keys(currentSessionDetailsOfEveryRoom).length != 0)
+    if (Object.keys(allSessionDetails).length != 0)
       socket.to(roomId).emit("newConnection", {
-        playStateServer:
-          currentSessionDetailsOfEveryRoom[roomId]["playingState"],
-        url: currentSessionDetailsOfEveryRoom[roomId]["url"],
+        playStateServer: allSessionDetails[roomId]["playingState"],
+        url: allSessionDetails[roomId]["url"],
       });
   });
 
   //It is listening only from host
   socket.on("onProgress", ({ state, roomId }) => {
-    currentSessionDetailsOfEveryRoom[roomId]["playedTime"] = state.played;
+    allSessionDetails[roomId]["playedTime"] = state.played;
     //If user pauses the video and host is still playing or viceversa, to sync it with the host we are doing this
     socket.to(roomId).emit("sync", {
       played: state.played,
-      url: currentSessionDetailsOfEveryRoom[roomId]["url"],
+      url: allSessionDetails[roomId]["url"],
     });
   });
 
   socket.on("url", ({ url, roomId }) => {
-    currentSessionDetailsOfEveryRoom[roomId]["url"] = url;
-    console.log(currentSessionDetailsOfEveryRoom[roomId]);
+    allSessionDetails[roomId]["url"] = url;
+    console.log(allSessionDetails[roomId]);
     //Same URL is broadcasted to everyone in that socket
     socket.to(roomId).emit("updateURL", url);
   });
 
   socket.on("onClickStop", ({ roomId }) => {
-    console.log(
-      "onClickSTop",
-      roomId,
-      currentSessionDetailsOfEveryRoom[roomId]
-    );
-    currentSessionDetailsOfEveryRoom[roomId]["url"] = null;
-    currentSessionDetailsOfEveryRoom[roomId]["playingState"] = false;
-    console.log(
-      "on click stop butomn",
-      currentSessionDetailsOfEveryRoom[roomId]
-    );
+    console.log("onClickSTop", roomId, allSessionDetails[roomId]);
+    allSessionDetails[roomId]["url"] = null;
+    allSessionDetails[roomId]["playingState"] = false;
+    console.log("on click stop butomn", allSessionDetails[roomId]);
     //Same URL is broadcasted to everyone in that socket
     socket
       .to(roomId)
@@ -116,17 +91,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    // connectionCount = connectionCount - 1;
-    // connectedUsers = connectedUsers.filter((id) => {
-    //   id !== socket.id;
-    // });
     console.log("Disconnected");
-    // if (connectionCount === 0) {
-    //   // If there are no users in the session, on new connection again the URL is set to null
-    //   urlServer = null;
-    //   playedTimeServer = 0;
-    //   playStateServer = true;
-    // }
   });
 });
 
